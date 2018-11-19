@@ -10,15 +10,18 @@ namespace app\api\model;
 
 
 use think\Db;
+use think\Model;
 
-class Banner
+class Banner extends Model
 {
     public static function getBannerByID($id){
         //TODO: 根据banner id来获取banner信息
 //        $result = Db::query('select * from banner_item where banner_id=?',[$id]);
 //        return $result;
 //        $result = Db::table('banner_item')->where('banner_id','=',$id)->select();
-        $result = Db::table('banner_item')->where(function($query) use ($id){
+        $result = Db::table('banner_item')
+            ->fetchSql()
+            ->where(function($query) use ($id){
             $query->where('banner_id','=', $id);
         })->select();
         return $result;
