@@ -22,10 +22,9 @@ class Banner
      */
     public function getBanner($id){
         (new IDMustBePositiveInt())->goCheck();
-//        $banner = BannerModel::getBannerByID($id);
-        $banner = BannerModel::get($id);  //模型查询时推荐使用静态的方法
-//        $banner = new BannerModel();
-//        $banner = $banner->get($id);
+        $banner = BannerModel::getBannerByID($id);
+//        $banner->hidden(['update_time']); //用于隐藏模型对象中的属性
+//        $banner->visible(['id']); //用于显示模型对象的属性
         if(!$banner){
             throw new BannerMissException();
         }
