@@ -19,7 +19,7 @@ return [
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => '',
+    'password'        => 'com163@lijun.',
     // 端口
     'hostport'        => '3307',
     // 连接dsn

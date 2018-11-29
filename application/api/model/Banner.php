@@ -14,6 +14,9 @@ use think\Model;
 
 class Banner extends Model
 {
+    // 隐藏对象模型的属性
+    protected $hidden = ['update_time','delete_time'];
+
     // 模型关联函数
     public function items(){
         // 参数：被关联的对象，关联模型的外键，本模型的主键
