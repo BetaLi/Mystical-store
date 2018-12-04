@@ -16,19 +16,17 @@ class Banner
 {
     /**
      * 获取指定id的banner信息
-     * @url /banner/:id
-     * @http GET
-     * @id banner 的id号
+     * @param $id
+     * @return array|false|\PDOStatement|string|\think\Model
+     * @throws BannerMissException
+     * @throws \app\lib\exception\ParameterException
      */
     public function getBanner($id){
         (new IDMustBePositiveInt())->goCheck();
         $banner = BannerModel::getBannerByID($id);
-//        $banner->hidden(['update_time']); //用于隐藏模型对象中的属性
-//        $banner->visible(['id']); //用于显示模型对象的属性
         if(!$banner){
             throw new BannerMissException();
         }
-        $c = config('setting.img_prefix');
         return $banner;
     }
 }

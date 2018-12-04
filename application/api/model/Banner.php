@@ -27,14 +27,5 @@ class Banner extends Model
         //TODO: 根据banner id来获取banner信息
         $banner = self::with(['items','items.img'])->find($id);  //模型查询时推荐使用静态的方法
         return $banner;
-//        $result = Db::query('select * from banner_item where banner_id=?',[$id]);
-//        return $result;
-//        $result = Db::table('banner_item')->where('banner_id','=',$id)->select();
-//        $result = Db::table('banner_item')
-//            ->fetchSql()
-//            ->where(function($query) use ($id){
-//            $query->where('banner_id','=', $id);
-//        })->select();
-//        return $result;
     }
 }

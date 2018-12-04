@@ -7,5 +7,5 @@
  */
 
     return [
-        'img_prefix' => 'http://z.cn/imgs'
+        'img_prefix' => 'http://z.cn/images'
     ];
