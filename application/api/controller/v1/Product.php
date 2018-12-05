@@ -11,6 +11,7 @@ namespace app\api\controller\v1;
 
 use app\api\validate\Count;
 use \app\api\model\Product as ProductModel;
+use app\api\validate\IDMustBePositiveInt;
 use app\lib\exception\ProductException;
 
 class Product
@@ -24,6 +25,19 @@ class Product
         if(!$products){
             throw new ProductException();
         }
+        $collection = collection($products);
+        $products = $collection->hidden(['summary']);
+        return $products;
+    }
+
+    public function getAllInCategory($id){
+        (new IDMustBePositiveInt())->goCheck();
+        $products = ProductModel::getProductsByCategoryID($id);
+        if(!$products){
+            throw new ProductException();
+        }
+        $collection = collection($products);
+        $products = $collection->hidden(['summary']);
         return $products;
     }
 }

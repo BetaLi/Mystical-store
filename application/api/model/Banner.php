@@ -24,7 +24,6 @@ class Banner extends Model
     }
 
     public static function getBannerByID($id){
-        //TODO: 根据banner id来获取banner信息
         $banner = self::with(['items','items.img'])->find($id);  //模型查询时推荐使用静态的方法
         return $banner;
     }
