@@ -7,5 +7,5 @@
  */
 
     return [
-        'token_salt' => 'HHrrwekdfxcdssa'
+        'token_salt' => 'thisisamysticalstoreproject'
     ];
