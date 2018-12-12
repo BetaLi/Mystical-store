@@ -9,9 +9,12 @@
 namespace app\api\service;
 
 
+use app\api\model\OrderProduct;
 use app\api\model\UserAddress;
 use app\api\validate\OrderException;
 use app\lib\exception\UserException;
+use \app\api\model\Order as OrderModel;
+use think\Exception;
 
 class Order
 {
@@ -37,10 +40,43 @@ class Order
 
         // 开始创建订单
         $orderSnap = $this->snapOrder($status);
+        $order = $this->createOrder($orderSnap);
+        $order['pass'] = true;
+        return $order;
     }
 
-    private function createOrder(){
+    private function createOrder($snap){
+        try{
+            $orderNo = $this->makeOrderNo();
+            $order = new OrderModel();
+            $order->user_id = $this->uid;
+            $order->order_no = $orderNo;
+            $order->order_price = $snap['orderPrice'];
+            $order->total_price = $snap['totalCount'];
+            $order->snap_img = $snap['snapImg'];
+            $order->snap_name = $snap['snapName'];
+            $order->snap_address = $snap['snapAddress'];
+            $order->snap_items = json_encode($snap['pStatus']);
 
+            $order->save();
+
+            $orderID = $order->id;
+            $create_time = $order->create_time;
+            foreach ($this->oProducts as &$p){
+                $p['order_id'] = $orderID;
+            }
+
+            $orderProduct = new OrderProduct();
+            $orderProduct->saveAll($this->oProducts);
+            return [
+                'order_no'=>$orderNo,
+                'order_id'=>$orderID,
+                'create_time'=>$create_time
+            ];
+        }
+        catch (Exception $ex){
+            throw $ex;
+        }
     }
 
     public static function makeOrderNo()
