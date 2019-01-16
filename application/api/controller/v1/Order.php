@@ -22,6 +22,7 @@ class Order extends BaseController
     // 调用支付接口进行支付
     // 还需要再次进行库存量检测
     // 服务器调用微信的支付接口进行支付
+    // 小程序根据服务器返回的结果拉起微信支付
     // 微信会返回给我们一个支付结果
     // 成功：进行库存量的检测
     // 成功：进行库存量的扣除，失败：返回一个支付失败的结果
@@ -34,7 +35,6 @@ class Order extends BaseController
         (new OrderPlace())->goCheck();
         $products = input('post.products/a');
         $uid = TokenService::getCurrentUid();
-
         $order = new OrderService();
         $status = $order->place($uid,$products);
         return $status;

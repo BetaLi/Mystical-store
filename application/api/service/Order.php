@@ -10,10 +10,12 @@ namespace app\api\service;
 
 
 use app\api\model\OrderProduct;
+use app\api\model\Product;
 use app\api\model\UserAddress;
 use app\api\validate\OrderException;
 use app\lib\exception\UserException;
 use \app\api\model\Order as OrderModel;
+use think\Db;
 use think\Exception;
 
 class Order
@@ -46,13 +48,14 @@ class Order
     }
 
     private function createOrder($snap){
+        Db::startTrans();
         try{
             $orderNo = $this->makeOrderNo();
             $order = new OrderModel();
             $order->user_id = $this->uid;
             $order->order_no = $orderNo;
-            $order->order_price = $snap['orderPrice'];
-            $order->total_price = $snap['totalCount'];
+            $order->total_price = $snap['orderPrice'];
+            $order->total_count = $snap['totalCount'];
             $order->snap_img = $snap['snapImg'];
             $order->snap_name = $snap['snapName'];
             $order->snap_address = $snap['snapAddress'];
@@ -68,6 +71,7 @@ class Order
 
             $orderProduct = new OrderProduct();
             $orderProduct->saveAll($this->oProducts);
+            Db::commit();
             return [
                 'order_no'=>$orderNo,
                 'order_id'=>$orderID,
@@ -75,6 +79,7 @@ class Order
             ];
         }
         catch (Exception $ex){
+            Db::rollback();
             throw $ex;
         }
     }
@@ -104,11 +109,11 @@ class Order
         $snap['totalCount'] = $status['totalCount'];
         $snap['pStatus'] = $status['pStatusArray'];
         $snap['snapAddress'] = json_encode($this->getUserAddress());
-        $snap['name'] = $this->products[0]['name'];
-        $snap['snapName'] = $this->products[0]['main_img_url'];
+        $snap['snapName'] = $this->products[0]['name'];
+        $snap['snapImg'] = $this->products[0]['main_img_url'];
 
         if(count($this->products)>1){
-            $snap['name'] .= '等';
+            $snap['snapName'] .= '等';
         }
 
         return $snap;
@@ -123,6 +128,16 @@ class Order
             ]);
         }
         return $userAddress->toArray();
+    }
+
+    public function checkOrderStock($orderID){
+        $oProducts = OrderProduct::where('order_id','=',$orderID)
+            ->select();
+        $this->oProducts = $oProducts;
+
+        $this->products = $this->getProductsByOrder($oProducts);
+        $status = $this->getOrderStatus();
+        return $status;
     }
 
     private function getOrderStatus(){
@@ -176,9 +191,7 @@ class Order
             if($product['stock']-$oCount>=0){
                 $pStatus['haveStock'] = true;
             }
-
             return $pStatus;
-
         }
     }
 

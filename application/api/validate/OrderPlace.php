@@ -10,7 +10,6 @@ namespace app\api\validate;
 
 
 use app\lib\exception\ParameterException;
-use think\Validate;
 
 class OrderPlace extends BaseValidate
 {
@@ -24,7 +23,7 @@ class OrderPlace extends BaseValidate
     ];
 
     protected function checkProducts($values){
-        if(is_array($values)){
+        if(!is_array($values)){
             throw new ParameterException([
                 'msg' => '商品参数不正确'
             ]);
@@ -42,7 +41,7 @@ class OrderPlace extends BaseValidate
     }
 
     protected function checkProduct($value){
-        $validate = new Validate($this->singleRule);
+        $validate = new BaseValidate($this->singleRule);
         $result = $validate->check($value);
         if(!$result){
             throw new ParameterException([
