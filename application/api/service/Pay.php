@@ -59,7 +59,7 @@ class Pay
         $wxOrderData->SetBody('零食商贩');
         $wxOrderData->SetOpenid($openid);
         $wxOrderData->SetAppid('wx163d3a3fd4858b6d');
-        $wxOrderData->SetNotify_url('https://api.mch.weixin.qq.com/pay/unifiedorder');
+        $wxOrderData->SetNotify_url(config(secure.pay_back_url));
         return $this->getPaySignature($wxOrderData);
     }
 

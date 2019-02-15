@@ -26,7 +26,7 @@ class Product
             throw new ProductException();
         }
         $collection = collection($products);
-        $products = $collection->hidden(['summary']);
+//        $products = $collection->hidden(['summary']);
         return $products;
     }
 

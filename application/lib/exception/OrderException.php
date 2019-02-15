@@ -6,10 +6,8 @@
  * Time: 20:07
  */
 
-namespace app\api\validate;
+namespace app\lib\exception;
 
-
-use app\lib\exception\BaseException;
 
 class OrderException extends BaseException
 {
